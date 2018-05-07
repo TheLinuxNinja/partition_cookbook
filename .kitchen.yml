@@ -1,0 +1,43 @@
+---
+driver:
+  name: vagrant
+  vagrantfiles:
+    - datadisk.rb
+  box_check_update: true
+  linked_clone: true
+  customize:
+    memory: 1024
+    cpus: 2
+
+provisioner:
+  name: chef_zero
+  product_name: chef
+  channel: stable
+  install_strategy: once
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+  product_version: 13.8.5
+  deprecations_as_errors: true
+  enforce_idempotency: true
+  multiple_converge: 2
+
+transport:
+  compression: true
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu-16.04
+
+suites:
+  - name: partition
+    run_list:
+      - recipe[partition::default]
+      - recipe[partition::_test]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:

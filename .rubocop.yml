@@ -1,0 +1,12 @@
+AllCops:
+  TargetRubyVersion: 2.4.3
+
+Style/Encoding:
+  Enabled: false
+
+Style/SymbolArray:
+  EnforcedStyle: percent
+  MinSize: 3
+
+Metrics/LineLength:
+  Max: 500
