@@ -14,6 +14,10 @@ default_action :nothing
 action :mklabel do
   execute "parted #{new_resource.device} --script -- mklabel #{new_resource.label_type}" do
     not_if "parted #{new_resource.device} --script -- print |grep 'Partition Table: #{new_resource.label_type}'"
+    environment({
+      'LANG' => 'C',
+      'LC_ALL' => 'C',
+    })
   end
 end
 
@@ -23,6 +27,10 @@ action :mkpart do
     # Number  Start   End    Size   File system  Name  Flags
     #  1      17.4kB  537GB  537GB               xfs
     not_if "parted #{new_resource.device} --script -- print |sed '1,/^Number/d' |grep #{new_resource.part_type}"
+    environment({
+      'LANG' => 'C',
+      'LC_ALL' => 'C',
+    })
   end
 end
 
@@ -32,6 +40,10 @@ action :mkfs do
     # or
     # /dev/sdb1: Linux rev 1.0 ext4 filesystem data, UUID=435fd604-cf17-4f5c-b39a-c9829a209ed5 (extents) (large files) (huge files)
     not_if "file -sL #{new_resource.device} |grep -i #{new_resource.file_system}"
+    environment({
+      'LANG' => 'C',
+      'LC_ALL' => 'C',
+    })
   end
 end
 
@@ -40,6 +52,10 @@ action :setflag do
     # Number  Start   End    Size   Type     File system  Flags
     #  1      1049kB  107GB  107GB  primary               boot
     not_if "parted #{new_resource.device} --script -- print |grep '#{new_resource.flag_name}'"
+    environment({
+      'LANG' => 'C',
+      'LC_ALL' => 'C',
+    })
   end
 end
 
